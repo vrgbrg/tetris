@@ -1,0 +1,32 @@
+let shapes = [
+  {name: 'iShape1', value: [[0, 1], [1, 1], [2, 1], [3, 1]]},
+  {name: 'iShape2', value: [[1, 0], [1, 1], [1, 2], [1, 3]]},
+  {name: 'iShape3', value: [[0, 2], [1, 2], [2, 2], [3, 2]]},
+  {name: 'iShape4', value: [[3, 0], [3, 1], [3, 2], [3, 3]]},
+  {name: 'jShape1', value: [[0, 2], [0, 1], [1, 1], [2, 1]]},
+  {name: 'jShape2', value: [[1, 0], [1, 1], [1, 2], [2, 2]]},
+  {name: 'jShape3', value: [[2, 0], [0, 1], [1, 1], [2, 1]]},
+  {name: 'jShape4', value: [[0, 0], [1, 0], [1, 1], [1, 2]]},
+  {name: 'lShape1', value: [[0, 0], [0, 1], [1, 1], [2, 1]]},
+  {name: 'lShape2', value: [[1, 0], [1, 1], [1, 2], [0, 2]]},
+  {name: 'lShape3', value: [[0, 1], [1, 1], [2, 1], [2, 2]]},
+  {name: 'lShape4', value: [[2, 0], [1, 0], [1, 1], [1, 2]]},
+  {name: 'oShape1', value: [[0, 0], [0, 1], [1, 0], [1, 1]]},
+  {name: 'oShape2', value: [[0, 0], [0, 1], [1, 0], [1, 1]]},
+  {name: 'oShape3', value: [[0, 0], [0, 1], [1, 0], [1, 1]]},
+  {name: 'oShape4', value: [[0, 0], [0, 1], [1, 0], [1, 1]]},
+  {name: 'sShape1', value: [[0, 0], [1, 0], [1, 1], [2, 1]]},
+  {name: 'sShape2', value: [[1, 0], [1, 1], [0, 1], [0, 2]]},
+  {name: 'sShape3', value: [[0, 1], [1, 1], [1, 2], [2, 2]]},
+  {name: 'sShape4', value: [[2, 0], [2, 1], [1, 1], [1, 2]]},
+  {name: 'zShape1', value: [[2, 0], [1, 0], [1, 1], [0, 1]]},
+  {name: 'zShape2', value: [[0, 0], [0, 1], [1, 1], [1, 2]]},
+  {name: 'zShape3', value: [[2, 1], [1, 1], [1, 2], [0, 2]]},
+  {name: 'zShape4', value: [[1, 0], [1, 1], [2, 1], [2, 2]]},
+  {name: 'tShape1', value: [[1, 0], [1, 1], [0, 1], [1, 2]]},
+  {name: 'tShape2', value: [[0, 1], [1, 1], [1, 2], [2, 2]]},
+  {name: 'tShape3', value: [[1, 0], [1, 1], [2, 1], [1, 2]]},
+  {name: 'tShape4', value: [[0, 1], [1, 0], [1, 1], [2, 2]]}
+];
+
+module.exports = shapes
