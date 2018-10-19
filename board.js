@@ -1,5 +1,3 @@
-const grid = require('pixel-grid');
-
 let board = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
