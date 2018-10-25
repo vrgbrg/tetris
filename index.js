@@ -119,7 +119,7 @@ const fall = () => {
 };
 
 const rotate = () => {
-  if (currentValue.direction < 4) {
+  if (currentValue.direction < 3) {
     currentValue.direction++;
   } else {
     currentValue.direction = 0;
