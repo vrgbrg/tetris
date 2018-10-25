@@ -4,12 +4,11 @@ const shapes = require('./shapes');
 let table = require('table');
 let pX = shapes.p1x;
 let pY = shapes.p1y;
-let currentShapes = [];
 let currentValue = null;
 let interval = 400
   , gameLoop
   , tick = 0;
-let filled = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
+// let filled = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
 const row = 20;
 const cols = 10;
@@ -75,11 +74,13 @@ const eachLoop = () => {
   eraseElement();
   fall();
   showElement();
+  if (clearLine()) {
+    newRow();
+  }
   if (freeze()) {
     fixElements();
     currentValue = null;
   }
-  clearLine();
   gameOver();
   let tableView = table.table(board);
   console.log(tableView);
@@ -140,14 +141,25 @@ const gameOver = () => {
 };
 
 const clearLine = () => {
-  for (let j = 0; j < board[0].length; j++) {
-    if (j === filled) {
-      board.splice(j, 1);
-      board.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  
+  for (let i = 0; i < board.length; i++) {
+    let filled = 0;
+    for (let j = 0; j < board[0].length; j++) {
+      if (board[i][j] === 2) {
+        filled++;
+      }
+    }
+    if (filled === board[0].length) {
+      console.log('clear');
+      board.splice(i, 1);
       return true;
     }
   }
   return false;
+};
+
+const newRow = () => {
+  board.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 };
 
 const showElement = () => {
