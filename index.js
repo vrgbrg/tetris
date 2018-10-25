@@ -1,142 +1,185 @@
-//Requires
-let keypress = require('keypress')
-  , c = require('axel')
-  , width = c.cols
-  , height = c.rows
-  , p1x = c.cols / 2
-  , p1y = 3
-  , lp1x = p1x
-  , lp1y = p1y
+let keypress = require('keypress');
+let a = require('axel');
+const shapes = require('./shapes');
+let table = require('table');
+let pX = shapes.p1x;
+let pY = shapes.p1y;
+let currentShapes = [];
+let currentValue = null;
+let interval = 400
   , gameLoop
-  , interval = 20
-  , tick = 0
-  , box = []
-  ;
+  , tick = 0;
+let filled = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
-// var theBrush = '█';
-let theBrush = ' ';
-
-function shapeSquare(x, y) {
-  c.clear();
-  let square = {
-    x: p1x,
-    y: p1y
-  };
-
-  if (square) {
-    c.brush = theBrush;
-    c.bg(0, 255, 0);
-    c.box(x, y, 2, 1);
-    c.box(x, y + 1, 2, 1);
-    c.box(x + 2, y, 2, 1);
-    c.box(x + 2, y + 1, 2, 1);
-  }
-
-  for (let i = 0; i < box.length; i++) {
-    c.box(box[i].x, box[i].y, 4, 2);
-    //console.log(box);
+const row = 20;
+const cols = 10;
+const vacant = 0;
+let board = [];
+for (let r = 0; r < row; r++) {
+  board[r] = [];
+  for (let c = 0; c < cols; c++) {
+    board[r][c] = vacant;
   }
 }
 
-function eraseShapeSquare(x, y) {
-  c.brush = ' ';
-  c.cursor.reset();
-  c.box(x - 2, y, 8, 2);
-}
+const renderGameSpace = (gameSpaceArray) => {
+  for (let y = 0; y < gameSpaceArray.length - 1; y++) {
+    for (let x = 0; x < gameSpaceArray[0].length; x++) {
+      if (gameSpaceArray[y][x] !== 0) {
+        currentValue = gameSpaceArray[y][x];
+        // drawRectange(y, x, currentValue);
+        // console.log(`A megjelenítendő kockák az x = ${x} \n az y = ${y}`);
+        // console.log(board);
+      }
+    }
+  }
+};
 
-function eachLoop() {
-  tick += 1;
+// console.log(elements[0]);
+// console.log(elements.i.contents[3]);
 
-  width = c.cols;
-  height = c.rows;
-
-  //checkKeyDown();
-
-  eraseShapeSquare(lp1x, lp1y);
-  shapeSquare(p1x, p1y);
-  drop();
-  freeze();
-}
-
-function endGame() {
+const endGame = () => {
   process.stdin.pause();
   clearInterval(gameLoop);
-  c.cursor.on();
-  c.cursor.restore();
-}
+  a.cursor.on();
+  a.cursor.restore();
+};
 
-function start() {
-  c.cursor.off();
-  c.clear();
+const start = () => {
+  a.cursor.off();
+  a.clear();
   gameLoop = setInterval(eachLoop, interval);
-}
+};
 
-function key() {
+const getRandomShape = () => {
+  let randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+  // let posShape = randomShape.value;
+  randomShape.x = 0;
+  randomShape.y = 0;
+  return randomShape;
+};
+
+const key = () => {
   process.stdin.setRawMode(true);
   keypress(process.stdin);
   process.stdin.resume();
-}
+};
+
+const eachLoop = () => {
+  if (currentValue === null) {
+    currentValue = getRandomShape();
+  }
+  // console.log(currentValue);
+  tick += 1;
+  // checkKeyDown();
+  eraseElement();
+  fall();
+  showElement();
+  if (freeze()) {
+    fixElements();
+    currentValue = null;
+  }
+  clearLine();
+  gameOver();
+  let tableView = table.table(board);
+  console.log(tableView);
+};
 
 start();
 key();
 
-function left() {
-  lp1x = p1x;
-  p1x -= p1x > 10 ? 2 : 0;
-}
-
-function right() {
-  lp1x = p1x;
-  p1x += p1x < width - 10 ? 2 : 0;
-}
-
-function drop() {
-  lp1y = p1y;
-  p1y += p1y < height - 1 ? 0.05 : 0;
-}
-
-function checkBox() {
-  for (let i = 0; i < box.length; i++) {
-    const xPosBoxes = box.find(elem => elem.x === p1x);
-    if (xPosBoxes) {
-      return getMinElement(box)-2;
+const fixElements = () => {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      if (board[i][j] === 1) {
+        board[i][j] = 2;
+      }
     }
   }
-  return height - 1;
-}
+};
 
-function getMinElement(array) {
-  let min = box[0].y;
+const right = () => {
+  if (currentValue.x < board[0].length) {
+    currentValue.x++;
+  }
+};
 
-  for (let i = 0; i < box.length; i++) {
-    if (box[i].y < min) {
-      min = box[i].y;
+const left = () => {
+  if (currentValue.x < board[0].length) {
+    currentValue.x--;
+  }
+};
+
+const fall = () => {
+  if (currentValue.y <= board.length - 1) {
+    currentValue.y++;
+  }
+};
+
+const freeze = () => {
+  for (let i = currentValue.y; i < currentValue.y + 4; i++) {
+    for (let j = currentValue.x; j < currentValue.x + 4; j++) {
+      if (board[i][j] === 1 && (i + 1 === board.length || board[i + 1][j] === 2)) {
+        return true;
+      }
     }
   }
-  return min;
-}
+  return false;
+};
 
-function freeze() {
-  if (p1y >= checkBox()) {
-    let square = {
-      x: p1x,
-      y: p1y
-    };
-    box.push(square);
-    p1x = c.cols / 2;
-    p1y = 3;
+const gameOver = () => {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      if (board[1][j] === 2) {
+        console.log('Game over!');
+        return true;
+      }
+    }
   }
-}
+  return false;
+};
 
-var keyDown = null;
+const clearLine = () => {
+  for (let j = 0; j < board[0].length; j++) {
+    if (j === filled) {
+      board.splice(j, 1);
+      board.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      return true;
+    }
+  }
+  return false;
+};
+
+const showElement = () => {
+  for (let i = currentValue.y; i < currentValue.y + 4; i++) {
+    for (let j = currentValue.x; j < currentValue.x + 4; j++) {
+      if (currentValue.value[0][i - currentValue.y][j - currentValue.x] === 1) {
+        board[i][j] = currentValue.value[0][i - currentValue.y][j - currentValue.x];
+      }
+    }
+  }
+  // console.log(currentValue);
+};
+
+const eraseElement = () => {
+  for (let i = 0; i < board.length - 1; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      if (board[i][j] === 1) {
+        board[i][j] = 0;
+      }
+    }
+  }
+};
+
+let keyDown = null;
 
 process.stdin.on('keypress', function (ch, key) {
-
   if (key) {
     if (key.name === 'escape') endGame();
     if (key.name === 'q') endGame();
     if (key.name === 'left') left();
     if (key.name === 'right') right();
+    // if (key.name === 'space') rotate();
   }
 
   if (key && key.ctrl && key.name === 'c') {
@@ -145,5 +188,9 @@ process.stdin.on('keypress', function (ch, key) {
 
 });
 
-// p1x - boxnak van e olyan eleme ami megegyezik, ha van visszaadjuk a koordinátához tartozó y-t
-// ha nincs vissza kell adni a magasság - 1
+let tableView = table.table(board);
+console.log(tableView);
+// showBoard();
+renderGameSpace(board);
+// console.log(currentValue);
+// console.log(currentShape);
