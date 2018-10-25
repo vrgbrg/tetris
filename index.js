@@ -2,13 +2,13 @@ let keypress = require('keypress');
 let a = require('axel');
 const shapes = require('./shapes');
 let table = require('table');
+let term = require('terminal-kit');
 let pX = shapes.p1x;
 let pY = shapes.p1y;
 let currentValue = null;
 let interval = 400
   , gameLoop
   , tick = 0;
-// let filled = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
 const row = 20;
 const cols = 10;
@@ -81,6 +81,7 @@ const eachLoop = () => {
     fixElements();
     currentValue = null;
   }
+  // colorElement();
   gameOver();
   let tableView = table.table(board);
   console.log(tableView);
@@ -117,6 +118,14 @@ const fall = () => {
   }
 };
 
+const rotate = () => {
+  if (currentValue.direction < 4) {
+    currentValue.direction++;
+  } else {
+    currentValue.direction = 0;
+  }
+};
+
 const freeze = () => {
   for (let i = currentValue.y; i < currentValue.y + 4; i++) {
     for (let j = currentValue.x; j < currentValue.x + 4; j++) {
@@ -141,7 +150,7 @@ const gameOver = () => {
 };
 
 const clearLine = () => {
-  
+
   for (let i = 0; i < board.length; i++) {
     let filled = 0;
     for (let j = 0; j < board[0].length; j++) {
@@ -165,8 +174,8 @@ const newRow = () => {
 const showElement = () => {
   for (let i = currentValue.y; i < currentValue.y + 4; i++) {
     for (let j = currentValue.x; j < currentValue.x + 4; j++) {
-      if (currentValue.value[0][i - currentValue.y][j - currentValue.x] === 1) {
-        board[i][j] = currentValue.value[0][i - currentValue.y][j - currentValue.x];
+      if (currentValue.value[currentValue.direction][i - currentValue.y][j - currentValue.x] === 1) {
+        board[i][j] = currentValue.value[currentValue.direction][i - currentValue.y][j - currentValue.x];
       }
     }
   }
@@ -183,6 +192,24 @@ const eraseElement = () => {
   }
 };
 
+/*
+const colorElement = () => {
+  a.clear();
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      if (board[i][j] === 1) {
+        a.bg(0, 128, 255);
+        a.box(j, i, 2, 1);
+      } else if (board[i][j] === 2) {
+        a.bg(0, 128, 255);
+        a.box(j, i, 2, 1);
+      }
+    }
+  }
+  a.cursor.restore();
+};
+*/
+
 let keyDown = null;
 
 process.stdin.on('keypress', function (ch, key) {
@@ -191,7 +218,7 @@ process.stdin.on('keypress', function (ch, key) {
     if (key.name === 'q') endGame();
     if (key.name === 'left') left();
     if (key.name === 'right') right();
-    // if (key.name === 'space') rotate();
+    if (key.name === 'space') rotate();
   }
 
   if (key && key.ctrl && key.name === 'c') {
