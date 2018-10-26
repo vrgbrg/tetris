@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/vrgbrg/tetris#readme",
   "dependencies": {
-    "pixel-grid": "^1.0.2"
+    "axel": "0.0.3",
+    "keypress": "^0.2.1",
+    "pixel-grid": "^1.0.2",
+    "table": "^5.1.0"
   }
 }
