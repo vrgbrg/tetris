@@ -1,9 +1,10 @@
 let keypress = require('keypress');
-let a = require('axel');
 const shapes = require('./shapes');
 let table = require('table');
 const clear = require('console-clear');
+const mpg = require('mpg123');
 let currentValue = null;
+let nextValue = null;
 let interval = 600;
 let gameLoop;
 let tick = 0;
@@ -20,6 +21,13 @@ for (let r = 0; r < row; r++) {
     board[r][c] = vacant;
   }
 }
+
+const playMusic = () => {
+  var player = new mpg.MpgPlayer();
+  player.play(`${__dirname}/tetris.mp3`);
+};
+
+playMusic();
 
 const canvas = [[], [[], [], []]];
 
@@ -69,18 +77,15 @@ const renderGameSpace = (gameSpaceArray) => {
 const endGame = () => {
   process.stdin.pause();
   clearInterval(gameLoop);
-  a.cursor.on();
-  a.cursor.restore();
 };
 
 const start = () => {
-  a.cursor.off();
-  a.clear();
   gameLoop = setInterval(eachLoop, interval);
 };
 
 const getRandomShape = () => {
   let randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+
   // let randomShape = shapes[3];
   // let posShape = randomShape.value;
   randomShape.x = 0;
@@ -183,19 +188,19 @@ const freeze = () => {
 };
 
 const updateLevel = () => {
-  if (score >= 1000 && score < 2000) {
+  if (score >= 1000) {
     level = 2;
     interval -= 50;
-  } else if (score >= 2000 && score < 3000) {
+  } else if (score >= 2000) {
     level = 3;
     interval -= 100;
-  } else if (score >= 3000 && score < 4000) {
+  } else if (score >= 3000) {
     level = 4;
     interval -= 100;
-  } else if (score >= 4000 && score < 5000) {
+  } else if (score >= 4000) {
     level = 5;
     interval -= 100;
-  } else if (score >= 5000 && score < 6000) {
+  } else if (score >= 5000) {
     level = 6;
     interval -= 100;
   } else if (score >= 6000) {
