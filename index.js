@@ -2,12 +2,11 @@ let keypress = require('keypress');
 let a = require('axel');
 const shapes = require('./shapes');
 let table = require('table');
+const clear = require('console-clear');
 let currentValue = null;
 let interval = 400;
 let gameLoop;
 let tick = 0;
-let squareWidth = 1;
-let squareHeight = 1;
 let score = 0;
 
 const row = 20;
@@ -20,6 +19,8 @@ for (let r = 0; r < row; r++) {
     board[r][c] = vacant;
   }
 }
+
+const canvas = [[], [[], [], []]];
 
 const showBoard = () => {
   const row = 20;
@@ -99,6 +100,7 @@ const eachLoop = () => {
   // console.log(currentValue);
   tick += 1;
   // checkKeyDown();
+  clear();
   eraseElement();
   fall();
   showElement();
@@ -235,23 +237,6 @@ const eraseElement = () => {
     }
   }
 };
-
-const colorElement = () => {
-  a.clear();
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[0].length; j++) {
-      if (board[i][j] === 1) {
-        a.bg(0, 128, 255);
-        a.box(j, i, squareWidth, squareHeight);
-      } else if (board[i][j] === 2) {
-        a.bg(0, 128, 255);
-        a.box(j, i, squareWidth, squareHeight);
-      }
-    }
-  }
-  a.cursor.restore();
-};
-
 
 let keyDown = null;
 
