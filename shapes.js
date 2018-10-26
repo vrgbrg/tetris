@@ -6,6 +6,8 @@ let shapes = [
     name: 'iShape',
     x: p1x,
     y: p1y,
+    direction: 0,
+    color: '\x1b[44m\x1b[34m1\x1b[0m',
     value: [
       [
         [0, 1, 0, 0],
@@ -37,6 +39,8 @@ let shapes = [
     name: 'jShape',
     x: p1x,
     y: p1y,
+    direction: 0,
+    color: '\x1b[41m\x1b[31m1\x1b[0m',
     value: [
       [
         [0, 1, 0, 0],
@@ -68,6 +72,8 @@ let shapes = [
     name: 'lShape',
     x: p1x,
     y: p1y,
+    direction: 0,
+    color: '\x1b[42m\x1b[32m1\x1b[0m',
     value: [
       [
         [0, 1, 0, 0],
@@ -99,29 +105,31 @@ let shapes = [
     name: 'oShape',
     x: p1x,
     y: p1y,
+    direction: 0,
+    color: '\x1b[43m\x1b[33m1\x1b[0m',
     value: [
       [
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
         [0, 0, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 1, 0],
         [0, 0, 0, 0]
       ],
       [
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
         [0, 0, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 1, 0],
         [0, 0, 0, 0]
       ],
       [
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
         [0, 0, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 1, 0],
         [0, 0, 0, 0]
       ],
       [
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
         [0, 0, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 1, 0],
         [0, 0, 0, 0]
       ]
     ]
@@ -130,6 +138,8 @@ let shapes = [
     name: 'sShape',
     x: p1x,
     y: p1y,
+    direction: 0,
+    color: '\x1b[44m\x1b[34m1\x1b[0m',
     value: [
       [
         [0, 0, 0, 0],
@@ -161,6 +171,8 @@ let shapes = [
     name: 'zShape',
     x: p1x,
     y: p1y,
+    direction: 0,
+    color: '\x1b[45m\x1b[35m1\x1b[0m',
     value: [
       [
         [0, 0, 0, 0],
@@ -192,6 +204,8 @@ let shapes = [
     name: 'tShape',
     x: p1x,
     y: p1y,
+    direction: 0,
+    color: '\x1b[46m\x1b[36m1\x1b[0m',
     value: [
       [
         [0, 0, 0, 0],
