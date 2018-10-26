@@ -2,13 +2,13 @@ let keypress = require('keypress');
 let a = require('axel');
 const shapes = require('./shapes');
 let table = require('table');
-let term = require('terminal-kit');
-let pX = shapes.p1x;
-let pY = shapes.p1y;
 let currentValue = null;
-let interval = 400
-  , gameLoop
-  , tick = 0;
+let interval = 400;
+let gameLoop;
+let tick = 0;
+let squareWidth = 1;
+let squareHeight = 1;
+let score = 0;
 
 const row = 20;
 const cols = 10;
@@ -20,6 +20,33 @@ for (let r = 0; r < row; r++) {
     board[r][c] = vacant;
   }
 }
+
+const showBoard = () => {
+  const row = 20;
+  const cols = 10;
+  const vacant = 0;
+  let showBoard = [];
+  for (let r = 0; r < row; r++) {
+    showBoard[r] = [];
+    for (let c = 0; c < cols; c++) {
+      showBoard[r][c] = vacant;
+    }
+  }
+  for (let i = 0; i < showBoard.length; i++) {
+    for (let j = 0; j < showBoard[0].length; j++) {
+      showBoard[i][j] = board[i][j];
+      if (showBoard[i][j] === 2) {
+        showBoard[i][j] = '\x1b[40m\x1b[30m2\x1b[0m';
+      } else if (showBoard[i][j] === 1) {
+        showBoard[i][j] = currentValue.color;
+      } else if (showBoard[i][j] === 0) {
+        showBoard[i][j] = '\x1b[8m0\x1b[0m';
+      }
+    }
+  }
+  // console.log(currentValue);
+  return showBoard;
+};
 
 const renderGameSpace = (gameSpaceArray) => {
   for (let y = 0; y < gameSpaceArray.length - 1; y++) {
@@ -52,6 +79,7 @@ const start = () => {
 
 const getRandomShape = () => {
   let randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+  // let randomShape = shapes[3];
   // let posShape = randomShape.value;
   randomShape.x = 0;
   randomShape.y = 0;
@@ -83,7 +111,8 @@ const eachLoop = () => {
   }
   // colorElement();
   gameOver();
-  let tableView = table.table(board);
+  console.log('Score: ', score);
+  let tableView = table.table(showBoard());
   console.log(tableView);
 };
 
@@ -101,19 +130,26 @@ const fixElements = () => {
 };
 
 const right = () => {
-  if (currentValue.x < board[0].length) {
+  if (currentValue && currentValue.x < board[0].length - 2) {
     currentValue.x++;
   }
 };
 
 const left = () => {
-  if (currentValue.x < board[0].length) {
+  if (currentValue && currentValue.x >= 0) {
     currentValue.x--;
   }
 };
 
+const down = () => {
+  if (currentValue && currentValue.y < board.length) {
+    currentValue.y++;
+    interval = 300;
+  }
+};
+
 const fall = () => {
-  if (currentValue.y <= board.length - 1) {
+  if (currentValue && currentValue.y < board.length) {
     currentValue.y++;
   }
 };
@@ -127,10 +163,14 @@ const rotate = () => {
 };
 
 const freeze = () => {
-  for (let i = currentValue.y; i < currentValue.y + 4; i++) {
-    for (let j = currentValue.x; j < currentValue.x + 4; j++) {
-      if (board[i][j] === 1 && (i + 1 === board.length || board[i + 1][j] === 2)) {
-        return true;
+  for (let i = currentValue.y; i < currentValue.y + currentValue.value[currentValue.direction].length; i++) {
+    for (let j = currentValue.x; j < currentValue.x + currentValue.value[currentValue.direction][0].length; j++) {
+      if (i < row && j < cols) {
+        if (board[i][j] === 1) {
+          if (i + 1 === board.length || board[i + 1][j] === 2) {
+            return true;
+          }
+        }
       }
     }
   }
@@ -142,6 +182,7 @@ const gameOver = () => {
     for (let j = 0; j < board[0].length; j++) {
       if (board[1][j] === 2) {
         console.log('Game over!');
+        endGame();
         return true;
       }
     }
@@ -150,7 +191,6 @@ const gameOver = () => {
 };
 
 const clearLine = () => {
-
   for (let i = 0; i < board.length; i++) {
     let filled = 0;
     for (let j = 0; j < board[0].length; j++) {
@@ -161,6 +201,7 @@ const clearLine = () => {
     if (filled === board[0].length) {
       console.log('clear');
       board.splice(i, 1);
+      score += 100;
       return true;
     }
   }
@@ -172,8 +213,11 @@ const newRow = () => {
 };
 
 const showElement = () => {
-  for (let i = currentValue.y; i < currentValue.y + 4; i++) {
-    for (let j = currentValue.x; j < currentValue.x + 4; j++) {
+  if (!currentValue) {
+    return;
+  }
+  for (let i = currentValue.y; i < currentValue.y + currentValue.value[currentValue.direction].length; i++) {
+    for (let j = currentValue.x; j < currentValue.x + currentValue.value[currentValue.direction][0].length; j++) {
       if (currentValue.value[currentValue.direction][i - currentValue.y][j - currentValue.x] === 1) {
         board[i][j] = currentValue.value[currentValue.direction][i - currentValue.y][j - currentValue.x];
       }
@@ -192,23 +236,22 @@ const eraseElement = () => {
   }
 };
 
-/*
 const colorElement = () => {
   a.clear();
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
       if (board[i][j] === 1) {
         a.bg(0, 128, 255);
-        a.box(j, i, 2, 1);
+        a.box(j, i, squareWidth, squareHeight);
       } else if (board[i][j] === 2) {
         a.bg(0, 128, 255);
-        a.box(j, i, 2, 1);
+        a.box(j, i, squareWidth, squareHeight);
       }
     }
   }
   a.cursor.restore();
 };
-*/
+
 
 let keyDown = null;
 
@@ -217,6 +260,7 @@ process.stdin.on('keypress', function (ch, key) {
     if (key.name === 'escape') endGame();
     if (key.name === 'q') endGame();
     if (key.name === 'left') left();
+    if (key.name === 'down') down();
     if (key.name === 'right') right();
     if (key.name === 'space') rotate();
   }
@@ -227,7 +271,7 @@ process.stdin.on('keypress', function (ch, key) {
 
 });
 
-let tableView = table.table(board);
+let tableView = table.table(showBoard());
 console.log(tableView);
 // showBoard();
 renderGameSpace(board);
