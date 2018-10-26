@@ -3,12 +3,13 @@ let a = require('axel');
 const shapes = require('./shapes');
 let table = require('table');
 let currentValue = null;
-let interval = 400;
+let interval = 600;
 let gameLoop;
 let tick = 0;
 let squareWidth = 1;
 let squareHeight = 1;
 let score = 0;
+let level = 1;
 
 const row = 20;
 const cols = 10;
@@ -110,8 +111,10 @@ const eachLoop = () => {
     currentValue = null;
   }
   // colorElement();
+  updateLevel();
   gameOver();
   console.log('Score: ', score);
+  console.log('Level: ', level);
   let tableView = table.table(showBoard());
   console.log(tableView);
 };
@@ -175,6 +178,28 @@ const freeze = () => {
     }
   }
   return false;
+};
+
+const updateLevel = () => {
+  if (score > 1000) {
+    level++;
+    interval -= 50;
+  } else if (score > 2000) {
+    level++;
+    interval -= 100;
+  } else if (score > 3000) {
+    level++;
+    interval -= 100;  
+  } else if (score > 4000) {
+    level++;
+    interval -= 100;
+  } else if (score > 5000) {
+    level++;
+    interval -= 100;
+  } else if (score > 6000) {
+    level++;
+    interval -= 100;
+  }
 };
 
 const gameOver = () => {
