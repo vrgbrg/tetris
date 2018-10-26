@@ -184,22 +184,22 @@ const freeze = () => {
 
 const updateLevel = () => {
   if (score > 1000) {
-    level++;
+    level = 2;
     interval -= 50;
   } else if (score > 2000) {
-    level++;
+    level = 3;
     interval -= 100;
   } else if (score > 3000) {
-    level++;
+    level = 4;
     interval -= 100;  
   } else if (score > 4000) {
-    level++;
+    level = 5;
     interval -= 100;
   } else if (score > 5000) {
-    level++;
+    level = 6;
     interval -= 100;
   } else if (score > 6000) {
-    level++;
+    level = 7;
     interval -= 100;
   }
 };
