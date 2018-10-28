@@ -1,4 +1,4 @@
-let p1x = 0;
+let p1x = 5;
 let p1y = 0;
 
 let shapes = [
@@ -235,4 +235,4 @@ let shapes = [
   }
 ];
 
-module.exports = shapes
+module.exports = shapes;

@@ -20,6 +20,7 @@
     "axel": "0.0.3",
     "console-clear": "^1.1.1",
     "keypress": "^0.2.1",
+    "mpg123": "^0.2.3",
     "pixel-grid": "^1.0.2",
     "table": "^5.1.0"
   }
