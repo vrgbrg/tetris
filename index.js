@@ -10,7 +10,6 @@ let tick = 0;
 let interval = 600;
 let score = 0;
 let level = 1;
-// let player = new mpg.MpgPlayer();
 const getTimestamp = () => Math.round(new Date().getTime() / 1000);
 let lastKeyPress = getTimestamp();
 
@@ -25,11 +24,10 @@ for (let r = 0; r < row; r++) {
   }
 }
 
-/*
 const playMusic = () => {
+  let player = new mpg.MpgPlayer();
   player.play(`${__dirname}/tetris.mp3`);
 };
-*/
 
 const showBoard = () => {
   const row = 20;
@@ -227,14 +225,44 @@ const getMostLeftColumn = (element) => {
   return -1;
 };
 
+const rightBlock = () => {
+  for (let i = currentValue.y; i < currentValue.y + currentValue.value[currentValue.direction].length; i++) {
+    for (let j = currentValue.x; j < currentValue.x + currentValue.value[currentValue.direction][0].length; j++) {
+      if (i < row && j < cols) {
+        if (board[i][j] === 1) {
+          if (j + 1 === board[0].length || board[i][j + 1] === 2) {
+            return false;
+          }
+        }
+      }
+    }
+  }
+  return true;
+};
+
+const leftBlock = () => {
+  for (let i = currentValue.y; i < currentValue.y + currentValue.value[currentValue.direction].length; i++) {
+    for (let j = currentValue.x; j < currentValue.x + currentValue.value[currentValue.direction][0].length; j++) {
+      if (i < row && j < cols) {
+        if (board[i][j] === 1) {
+          if (j - 1 === board[0].length || board[i][j - 1] === 2) {
+            return false;
+          }
+        }
+      }
+    }
+  }
+  return true;
+};
+
 const right = () => {
-  if (currentValue && getMostRightColumn(currentValue) < board[0].length - 1) {
+  if (currentValue && getMostRightColumn(currentValue) < board[0].length - 1 && rightBlock()) {
     currentValue.x++;
   }
 };
 
 const left = () => {
-  if (currentValue && getMostLeftColumn(currentValue) > 0) {
+  if (currentValue && getMostLeftColumn(currentValue) > 0 && leftBlock()) {
     currentValue.x--;
   }
 };
@@ -313,7 +341,7 @@ process.stdin.on('keypress', function (ch, key) {
     if (key.name === 'space') rotate();
     if (key.name === 'down') down();
     // if (key.name === 's') player.close(`${__dirname}/tetris.mp3`);
-    // if (key.name === 'm') playMusic();
+    if (key.name === 'm') playMusic();
   }
 
   if (key && key.ctrl && key.name === 'c') {
