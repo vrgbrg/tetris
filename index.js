@@ -4,14 +4,12 @@ let table = require('table');
 const clear = require('console-clear');
 const mpg = require('mpg123');
 let currentValue = null;
-let nextValue = null;
 let gameLoop;
 let tick = 0;
 let interval = 600;
 let score = 0;
 let level = 1;
-const getTimestamp = () => Math.round(new Date().getTime() / 1000);
-let lastKeyPress = getTimestamp();
+let player = new mpg.MpgPlayer();
 
 const row = 20;
 const cols = 10;
@@ -25,7 +23,6 @@ for (let r = 0; r < row; r++) {
 }
 
 const playMusic = () => {
-  let player = new mpg.MpgPlayer();
   player.play(`${__dirname}/tetris.mp3`);
 };
 
@@ -57,7 +54,7 @@ const showBoard = () => {
 
 const sideBoard = () => {
   const sideRow = 1;
-  const sideCols = 3;
+  const sideCols = 2;
   const vacant = 0;
   let sideBoard = [];
   for (let sr = 0; sr < sideRow; sr++) {
@@ -69,7 +66,6 @@ const sideBoard = () => {
 
   sideBoard[0][0] = 'Level: ' + level;
   sideBoard[0][1] = 'Score: ' + score;
-  sideBoard[0][2] = 'Next: ';
 
   let sideView = table.table(sideBoard);
   console.log(sideView);
@@ -340,7 +336,7 @@ process.stdin.on('keypress', function (ch, key) {
     if (key.name === 'right') right();
     if (key.name === 'space') rotate();
     if (key.name === 'down') down();
-    // if (key.name === 's') player.close(`${__dirname}/tetris.mp3`);
+    if (key.name === 's') player.close(`${__dirname}/tetris.mp3`);
     if (key.name === 'm') playMusic();
   }
 
