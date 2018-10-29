@@ -3,6 +3,7 @@ const shapes = require('./shapes');
 let table = require('table');
 const clear = require('console-clear');
 const mpg = require('mpg123');
+const CFonts = require('cfonts');
 let currentValue = null;
 let gameLoop;
 let tick = 0;
@@ -184,7 +185,16 @@ const gameOver = () => {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
       if (board[1][j] === 2) {
-        console.log('\x1b[31m\x1b[7m\x1b[1m\x1b[5mGame over!\x1b[0m');
+        CFonts.say('Game over!', {
+          font: 'chrome',
+          align: 'left',
+          colors: 'red',
+          background: 'transparent',
+          letterSpacing: 1,
+          lineHeight: 1,
+          space: true,
+          maxLength: '10'
+        });
         endGame();
         return true;
       }

@@ -18,6 +18,7 @@
   "homepage": "https://github.com/vrgbrg/tetris#readme",
   "dependencies": {
     "axel": "0.0.3",
+    "cfonts": "^2.2.2",
     "console-clear": "^1.1.1",
     "keypress": "^0.2.1",
     "mpg123": "^0.2.3",
